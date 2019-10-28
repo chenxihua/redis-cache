@@ -1,0 +1,38 @@
+server:
+  port: 8013
+spring:
+  redis:
+    host: 192.168.244.131
+    password: zhanj201506
+    port: 6379
+    timeout: 2000
+    jedis:
+      pool:
+        max-active: 1000
+        max-idle: 100
+    database: 0
+    lettuce:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/jpa?serverTimezone=UTC
+    username: root
+    password: root
+  jpa:
+    database: mysql
+    properties:
+      hibernate:
+        naming:
+          #  开启驼峰命名法
+          physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+        hbm2ddl:
+          auto: update
+        format_sql: true
+    show-sql: true
+    open-in-view: true
+
