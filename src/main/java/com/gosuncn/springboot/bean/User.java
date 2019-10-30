@@ -24,7 +24,6 @@ import java.util.Date;
 @Table(name = "user")
 public class User implements Serializable {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -33,8 +32,8 @@ public class User implements Serializable {
     private long high;
 
     // optional = false 表示可选属性，此时表示dept不能为空。删除用户，不影响部门。
-    @JsonIgnore   //  设置@JsonIgnore,这个注解的意思是表示在序列化的时候，忽略这个属性
-    @ManyToOne(cascade = {CascadeType.MERGE,CascadeType.REFRESH}, optional = false)
+    //@JsonIgnore   //  设置@JsonIgnore,这个注解的意思是表示在序列化的时候，忽略这个属性(如果用这个注解，则添加时会抛异常，)
+    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.MERGE}, optional = false)
     @JoinColumn(name = "dept_id")  // 设置在dept表中的关联外键
     private Dept deptBean;
 

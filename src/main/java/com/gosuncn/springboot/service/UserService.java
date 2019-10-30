@@ -2,6 +2,7 @@ package com.gosuncn.springboot.service;
 
 import com.gosuncn.springboot.bean.User;
 import com.gosuncn.springboot.repository.UserRepotory;
+import com.gosuncn.springboot.util.AsserUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,9 @@ import java.util.*;
  **/
 
 @Service
-@CacheConfig(cacheNames = "user")     // 定义命名空间
+@CacheConfig(cacheNames = {"user", "chen"})     // 定义命名空间
 public class UserService {
+
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
@@ -39,16 +41,16 @@ public class UserService {
 
     // 定义缓存时的key
     //  user::com.gosuncn.springboot.service.UserService_selectUser_chen_1_10
-    @Cacheable(key = "targetClass.name + '_' + methodName + '_' + #p0 +'_' + #p1 + '_' + #p2")
-    public Map<String, Object> selectUser(String name, Integer pageIndex, Integer pageSize){
+    // 在@Cacheable 里面设置一个value，还可以指定使用 @CacheConfig(cacheNames = {"user", "chen"}) 里面的哪一个命名空间的缓存
+    @Cacheable(value = "user", key = " caches[0].name +'_'+ targetClass.name + '_' + methodName + '_' + #p0 ")
+    public Map<String, Object> selectUser(String name){
         Map<String, Object> result = new HashMap<>();
         List<User> all = userRepotory.findAllByUsernameContains(name);
-        result.put("data", all+ " " +pageIndex+" "+pageSize);
+        result.put("data", all);
         result.put("code", 0);
         return result;
     }
 
-    @Caching
     @Cacheable(key = "targetClass.name + '_' + methodName + '_' + #p0")
     public Map<String, Object> selectUserById(Integer id){
         Map<String, Object> result = new HashMap<>();
@@ -61,7 +63,11 @@ public class UserService {
         return result;
     }
 
-
+    /**
+     * chen::usercom.gosuncn.springboot.service.UserService_selectUser_f_1_10
+     * @param user
+     * @return
+     */
     @CacheEvict(key = "targetClass.name + '_selectUserById_' + #user.id", condition = "#user.id!=17")
     @Transactional
     public Map<String, Object> updateUser(User user){
@@ -85,6 +91,29 @@ public class UserService {
         return result;
     }
 
+
+    /**
+     * 这个方法，充分证明了jpa事务回滚方法。
+     * @param a
+     * @return
+     */
+    @Transactional
+    public Map<String, Object> asser(long a){
+        Map<String, Object> result = new HashMap<>();
+        User user = null;
+        Optional<User> byId = userRepotory.findById(11);
+        if (byId.isPresent()){
+             user = byId.get();
+        }
+        long l = user.getHigh() + a;
+        user.setHigh(l);
+        userRepotory.saveAndFlush(user);
+
+        AsserUtil.asserTrue(a!=10, "a要等于10，才可以通过");
+        result.put("code", 0);
+        result.put("data", l);
+        return result;
+    }
 
 
 

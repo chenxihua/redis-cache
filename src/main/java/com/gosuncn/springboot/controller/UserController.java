@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +28,7 @@ public class UserController {
 
     @PostMapping(value = "/save")
     public Map<String, Object> sava(@RequestBody User user){
+
         return userService.saveUser(user);
     }
 
@@ -43,12 +45,25 @@ public class UserController {
 
     @GetMapping(value = "/get")
     public Map<String, Object> select(@RequestParam String username ){
-        return userService.selectUser(username, 1, 10);
+        return userService.selectUser(username);
     }
 
     @GetMapping(value = "/getById")
     public Map<String, Object> selectById(@RequestParam Integer id){
         return userService.selectUserById(id);
+    }
+
+
+
+    @GetMapping(value = "/asser")
+    public Map<String, Object> testAsserTrue(@RequestParam long a){
+        Map<String, Object> result  = new HashMap<>();
+        try {
+            result = userService.asser(a);
+        }catch (Exception e){
+            result.put("message", e.getMessage());
+        }
+        return result;
     }
 
 }

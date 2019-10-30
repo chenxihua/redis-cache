@@ -16,7 +16,6 @@ import java.util.List;
  * @Create By: chenxihua
  * @Date: 2019/10/23 11:33
  **/
-//@JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler" })
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -31,6 +30,8 @@ public class Dept implements Serializable {
     private Integer id;
     private String name;
     private Integer peoples;
+
+
 
     /**
      * mappedBy = "deptBean" 中的 deptBean 是指 User 实体中的 deptBean 属性。
