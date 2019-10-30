@@ -41,6 +41,7 @@ public class UserService {
     }
 
     // 定义缓存时的key
+    
     //  user::com.gosuncn.springboot.service.UserService_selectUser_chen_1_10
     // 在@Cacheable 里面设置一个value，还可以指定使用 @CacheConfig(cacheNames = {"user", "chen"}) 里面的哪一个命名空间的缓存
     @Cacheable(value = "user", key = " caches[0].name +'_'+ targetClass.name + '_' + methodName + '_' + #p0 ")
