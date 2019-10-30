@@ -19,5 +19,9 @@ public class AsserUtil {
         }
     }
 
+    public static void asserFalse(boolean experssion, String message){
+
+    }
+
 
 }
