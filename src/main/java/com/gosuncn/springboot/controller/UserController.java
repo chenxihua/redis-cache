@@ -2,6 +2,7 @@ package com.gosuncn.springboot.controller;
 
 import com.gosuncn.springboot.bean.User;
 import com.gosuncn.springboot.service.UserService;
+import com.gosuncn.springboot.util.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,13 +55,17 @@ public class UserController {
     }
 
 
-
+    /**
+     * 这个方法，主要是判断预言工具的使用，以及jpa事务的可用性。
+     * @param a
+     * @return
+     */
     @GetMapping(value = "/asser")
     public Map<String, Object> testAsserTrue(@RequestParam long a){
-        Map<String, Object> result  = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
         try {
             result = userService.asser(a);
-        }catch (Exception e){
+        }catch (BusinessException e){
             result.put("message", e.getMessage());
         }
         return result;

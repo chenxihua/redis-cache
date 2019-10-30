@@ -3,6 +3,7 @@ package com.gosuncn.springboot.service;
 import com.gosuncn.springboot.bean.User;
 import com.gosuncn.springboot.repository.UserRepotory;
 import com.gosuncn.springboot.util.AsserUtil;
+import com.gosuncn.springboot.util.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,7 @@ public class UserService {
         return result;
     }
 
-    @Cacheable(key = "targetClass.name + '_' + methodName + '_' + #p0")
+    @Cacheable(value = "chen", key = "targetClass.name + '_' + methodName + '_' + #p0")
     public Map<String, Object> selectUserById(Integer id){
         Map<String, Object> result = new HashMap<>();
         Optional<User> optional = userRepotory.findById(id);
@@ -80,10 +81,15 @@ public class UserService {
 
     /**
      * 删除缓存的
+     *
+     *  1: 第一个注解， @CacheEvict 是只能删除一个名称空间的缓存。
+     *  2：第二个注解， @Caching 是可以删除多个名称空间的缓存。
+     *
      * @param id
      * @return
      */
-    @CacheEvict(value = "user", allEntries = true)
+    //@CacheEvict(value = "user", allEntries = true)
+    @Caching(evict = {@CacheEvict(value = "user", allEntries = true), @CacheEvict(value = "chen", allEntries = true)})
     public Map<String, Object> deleteUser(Integer id){
         Map<String, Object> result = new HashMap<>();
         userRepotory.deleteById(id);
@@ -94,6 +100,9 @@ public class UserService {
 
     /**
      * 这个方法，充分证明了jpa事务回滚方法。
+     *
+     * 注意： 在@Transactional 注解的方法里面，不可以使用 try-catch语句，要不然，不会抛出运行异常，导致事务不回滚
+     *
      * @param a
      * @return
      */
@@ -103,15 +112,16 @@ public class UserService {
         User user = null;
         Optional<User> byId = userRepotory.findById(11);
         if (byId.isPresent()){
-             user = byId.get();
+            user = byId.get();
         }
         long l = user.getHigh() + a;
         user.setHigh(l);
         userRepotory.saveAndFlush(user);
 
         AsserUtil.asserTrue(a!=10, "a要等于10，才可以通过");
-        result.put("code", 0);
         result.put("data", l);
+        result.put("code", 0);
+
         return result;
     }
 
