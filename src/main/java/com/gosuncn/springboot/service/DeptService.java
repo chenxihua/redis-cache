@@ -81,6 +81,7 @@ public class DeptService {
     public Map<String, Object> deleteDept(Integer id){
         Map<String, Object> result = new HashMap<>();
         deptRepository.deleteById(id);
+
         result.put("code", 0);
         return result;
     }

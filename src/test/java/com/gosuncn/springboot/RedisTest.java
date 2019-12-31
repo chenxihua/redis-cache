@@ -3,8 +3,10 @@ package com.gosuncn.springboot;
 import com.gosuncn.springboot.bean.Dept;
 import com.gosuncn.springboot.bean.User;
 import com.gosuncn.springboot.repository.DeptRepository;
+import com.gosuncn.springboot.repository.UserRepotory;
 import com.gosuncn.springboot.service.DeptService;
 import com.gosuncn.springboot.service.UserService;
+import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,8 @@ public class RedisTest {
     UserService userService;
     @Autowired
     DeptRepository deptRepository;
+    @Autowired
+    UserRepotory userRepotory;
 
     @Test
     public void testRedis(){
@@ -49,6 +53,16 @@ public class RedisTest {
         user.setDeptBean(dept);
         Map<String, Object> stringObjectMap = userService.saveUser(user);
         System.out.println("==> "+stringObjectMap.toString());
+    }
+
+
+    @Test
+    public void testRepository(){
+        String str = "李四";
+
+        User one = userRepotory.getOne(5);
+        //boolean equals = StringUtils.equals(str, one.getUsername());
+        System.out.println(one);
     }
 
 }

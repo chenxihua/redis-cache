@@ -7,7 +7,7 @@ package com.gosuncn.springboot.util;
  **/
 public class BusinessException extends RuntimeException {
 
-    private static Integer code = -1;
+    private Integer code = -1;
 
     public BusinessException(String message){
         super(message);
@@ -18,11 +18,11 @@ public class BusinessException extends RuntimeException {
         this.code = code;
     }
 
-    public static Integer getCode() {
-        return code;
+    public  Integer getCode() {
+        return this.code;
     }
 
-    public static void setCode(Integer code) {
-        BusinessException.code = code;
+    public void setCode(Integer code) {
+        this.code = code;
     }
 }
